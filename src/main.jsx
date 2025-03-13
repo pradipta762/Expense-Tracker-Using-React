@@ -22,9 +22,9 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <TransactionProvider>
       <RouterProvider router={router} />
     </TransactionProvider>
-  </StrictMode>
+  // </StrictMode>
 );

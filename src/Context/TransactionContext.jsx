@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const TransactionContext = createContext();
 
@@ -7,6 +7,31 @@ export const TransactionProvider = ({ children }) => {
   const [cashBalance, setCashBalance] = useState(0);
   const [upiBalance, setUpiBalance] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
+
+  useEffect(() => {
+    if (transactions.length || cashBalance || upiBalance || totalExpense) {
+      console.log("Saving to local storage", { transactions, cashBalance, upiBalance, totalExpense });
+      localStorage.setItem('transactions', JSON.stringify(transactions));
+      localStorage.setItem('cashBalance', JSON.stringify(cashBalance));
+      localStorage.setItem('upiBalance', JSON.stringify(upiBalance));
+      localStorage.setItem('totalExpense', JSON.stringify(totalExpense));
+    }
+  }, [transactions, cashBalance, upiBalance, totalExpense]);
+
+  useEffect(() => {
+    const storedTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
+    const storedCashBalance = JSON.parse(localStorage.getItem('cashBalance')) || 0;
+    const storedUpiBalance = JSON.parse(localStorage.getItem('upiBalance')) || 0;
+    const storedTotalExpense = JSON.parse(localStorage.getItem('totalExpense')) || 0;
+  
+    console.log("Loading from local storage", { storedTransactions, storedCashBalance, storedUpiBalance, storedTotalExpense });
+
+    setTransactions(storedTransactions);
+    setCashBalance(storedCashBalance);
+    setUpiBalance(storedUpiBalance);
+    setTotalExpense(storedTotalExpense);
+  }, []);
+  
 
   // Function to add an expense
   const addExpense = (expenseFor, amount, expenseMode) => {
